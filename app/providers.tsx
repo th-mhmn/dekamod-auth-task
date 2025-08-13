@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
+import useLocalStorageState from "@/hooks/useLocalStorageState";
 
 export type AuthUser = {
   firstName: string;
@@ -21,7 +22,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 const LOCAL_STORAGE_KEY = "auth_user";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser, isHydrated] = useLocalStorageState<AuthUser | null>(LOCAL_STORAGE_KEY, null);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -35,21 +36,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         typeof u.avatarUrl === "string"
       );
     };
-    try {
-      const stored = typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEY) : null;
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (isValidStoredUser(parsed)) {
-          setUser(parsed);
-        } else {
-          localStorage.removeItem(LOCAL_STORAGE_KEY);
-        }
-      }
-    } catch {}
+    if (!isHydrated) return;
+    if (user && !isValidStoredUser(user)) {
+      setUser(null);
+    }
     setIsReady(true);
-  }, []);
+  }, [isHydrated, user, setUser]);
 
-  const login = async () => {
+  const login = useCallback(async () => {
     const res = await fetch("https://randomuser.me/api/?results=1&nat=us", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -67,19 +61,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       avatarUrl: randomUser?.picture?.large ?? "",
     };
     setUser(nextUser);
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextUser));
-    } catch {}
-  };
+  }, [setUser]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
-    try {
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-    } catch {}
-  };
+  }, [setUser]);
 
-  const value = useMemo<AuthContextValue>(() => ({ user, login, logout, isReady }), [user, isReady]);
+  const value = useMemo<AuthContextValue>(() => ({ user, login, logout, isReady }), [user, isReady, login, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
