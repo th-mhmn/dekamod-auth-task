@@ -1,0 +1,38 @@
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+  }
+
+  &[aria-invalid="true"] {
+    border-color: #b00020;
+  }
+}
+
+.hint {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.error {
+  margin-top: 6px;
+  color: #b00020;
+  font-size: 12px;
+}
+
+
