@@ -32,10 +32,5 @@ This project implements a minimal authentication flow in Next.js (App Router) wi
 ### Images
 - Next `Image` used on `/dashboard`; remote domain `randomuser.me` configured in `next.config.ts`
 
-### Extensibility Ideas
-- Replace random user API with a real backend
-- Add JWT storage and refresh flow
-- Introduce server actions for login and session cookies
-- Protect server components via middleware or server-side auth checks
 
 
