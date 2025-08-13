@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Authentication Flow – Next.js + TypeScript + SCSS
 
-## Getting Started
+A minimal authentication flow built with **Next.js (App Router)**, **TypeScript**, and **SCSS Modules**, featuring schema-based form validation, reusable UI components, and client-side authentication state management.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- **Two-page auth flow**
+  - `/auth` – Login form with **Iranian mobile number validation**
+  - `/dashboard` – Protected page showing a welcome message
+- **Schema-based validation** with [Zod](https://zod.dev/) + [react-hook-form](https://react-hook-form.com/)
+- **Reusable UI components** (`Input`, `Button`, `Spinner`)
+- **Auth context** with `localStorage` persistence
+- **SCSS Modules** with nested selectors
+- **Responsive & accessible** design
+- Type-safe implementation with **TypeScript**
+
+---
+
+## 📂 Project Structure
+
+````bash
+├── DOCS.md
+├── README.md
+├── app
+│   ├── auth
+│   │   ├── page.module.scss
+│   │   └── page.tsx
+│   ├── dashboard
+│   │   ├── page.module.scss
+│   │   └── page.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.module.css
+│   ├── page.tsx
+│   └── providers.tsx
+├── components
+│   └── ui
+│       ├── Button.module.scss
+│       ├── Button.tsx
+│       ├── Input.module.scss
+│       ├── Input.tsx
+│       ├── Spinner.module.scss
+│       └── Spinner.tsx
+├── eslint.config.mjs
+├── lib
+│   └── validation
+│       └── auth.ts
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+└── tsconfig.json
+````
+
+---
+
+## 🔑 Authentication Flow
+1. User enters phone number on `/auth`
+2. Form validates: **must match** `/^09\d{9}$/` (11 digits, starting with `09`)
+3. On submit:
+   - Fetches random US user from `https://randomuser.me/api/?results=1&nat=us`
+   - Saves user data in `localStorage` and updates context
+   - Redirects to `/dashboard`
+4. On `/dashboard`:
+   - If no user is found in context/localStorage → Redirects back to `/auth`
+
+---
+
+## 🛠 Tech Stack
+
+- **Next.js** – App Router
+- **TypeScript** – Type safety
+- **SCSS Modules** – Component-scoped styles with nesting
+- **React Hook Form** – Form state management
+- **Zod** – Schema validation
+- **Context API** – Auth state management
+- **Random User API** – Mock user data
+
+---
+
+## 📦 Installation & Running
 
 ```bash
+# Clone repository
+git clone https://github.com/th-mhmn/dekamod-auth-task
+cd dekamod-auth-task
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+````
+App will be available at:
+➡️ http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Documentation
 
-## Learn More
+To learn more about this app and its structure, see `DOCS.md`.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Authors
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Taha Mehmandoust](https://www.github.com/th-mhmn)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
